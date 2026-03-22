@@ -72,7 +72,7 @@ def chat():
 # =========================
 # 7. Ejecutar
 # =========================
-    import os
+import os
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
