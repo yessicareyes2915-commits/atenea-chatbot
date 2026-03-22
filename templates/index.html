@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atenea - Chatbot CULagos</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Paleta de colores Leones Negros (Negro y Oro) */
+        :root {
+            --negro-udeg: #000000;
+            --oro-udeg: #d4af37; /* Tono dorado elegante */
+            --oro-claro: #fcf4d9; /* Fondo suave para los mensajes del bot */
+            --bg-body: #1a1a1a; /* Fondo oscuro para resaltar la ventana del chat */
+            --chat-bg: #ffffff;
+            --text-main: #333333;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            background-image: radial-gradient(circle at center, #333 0%, #111 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Contenedor principal imitando un celular */
+        #chat-container {
+            width: 100%;
+            max-width: 400px;
+            background: var(--chat-bg);
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            height: 85vh;
+            border: 8px solid #333; /* Borde simulando el teléfono */
+        }
+
+        /* Cabecera Negra y Dorada */
+        .header {
+            background-color: var(--negro-udeg);
+            color: var(--oro-udeg);
+            padding: 20px 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 3px solid var(--oro-udeg);
+        }
+
+        .header img {
+            width: 55px;
+            height: auto;
+            border-radius: 50%;
+            background: var(--negro-udeg);
+        }
+
+        .header-info h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .header-info p {
+            margin: 3px 0 0 0;
+            font-size: 0.8rem;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+
+        /* Área de mensajes */
+        #mensajes {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: #fafafa;
+        }
+
+        /* Estilos de las burbujas de chat */
+        .mensaje {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 15px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            animation: fadeIn 0.3s ease-in-out;
+            position: relative;
+        }
+
+        /* Mensaje del Alumno (Negro) */
+        .mensaje-alumno {
+            background-color: var(--negro-udeg);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        /* Mensaje de Atenea (Dorado) */
+        .mensaje-bot {
+            background-color: var(--oro-claro);
+            color: var(--negro-udeg);
+            align-self: flex-start;
+            border: 1px solid #eaddb6;
+            border-bottom-left-radius: 4px;
+            font-weight: 500;
+        }
+
+        /* Área de entrada de texto */
+        .input-area {
+            display: flex;
+            padding: 15px;
+            background: white;
+            border-top: 1px solid #eee;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #eee;
+            border-radius: 20px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--oro-udeg);
+        }
+
+        button {
+            background-color: var(--negro-udeg);
+            color: var(--oro-udeg);
+            border: none;
+            border-radius: 20px;
+            padding: 0 20px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background-color: #222;
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .sistema {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #888;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="chat-container">
+
+    <div class="header">
+        <img src="https://es.wikipedia.org/wiki/Universidad_de_Guadalajara" alt="Leones Negros" id="logo">
+        <div class="header-info"> <h2>Atenea</h2>
+            <p>Asistente de Mecatrónica y<br>Mecánica Eléctrica</p>
+        </div>
+    </div> <div id="mensajes">
+        <div class="sistema">Hoy</div>
+        <div class="mensaje mensaje-bot">¡Hola! Soy Atenea. ¿En qué te puedo ayudar hoy con tu carrera?</div>
+    </div>
+
+    <div class="input-area">
+        <input id="pregunta" placeholder="Pregúntale a Atenea..." autocomplete="off">
+        <button onclick="enviar()" id="btn-enviar">Enviar</button>
+    </div>
+
+</div> <script>
+    // Permitir enviar con la tecla Enter
+    document.getElementById("pregunta").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            enviar();
+        }
+    });
+
+    async function enviar() {
+        let input = document.getElementById("pregunta");
+        let pregunta = input.value.trim();
+
+        if (pregunta === "") return;
+
+        let mensajes = document.getElementById("mensajes");
+
+        // Mostrar mensaje del alumno
+        mensajes.innerHTML += `<div class="mensaje mensaje-alumno">${pregunta}</div>`;
+        input.value = ""; 
+        hacerScrollAbajo(mensajes);
+
+        try {
+            // Petición al servidor 
+            let respuesta = await fetch("/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    pregunta: pregunta
+                })
+            });
+
+            let data = await respuesta.json();
+
+            // Mostrar la respuesta de Atenea
+            mensajes.innerHTML += `<div class="mensaje mensaje-bot">${data.respuesta}</div>`;
+            hacerScrollAbajo(mensajes);
+
+        } catch (error) {
+            console.error("Error en la conexión:", error);
+            mensajes.innerHTML += `<div class="mensaje mensaje-bot" style="color: #c8102e;">Ocurrió un error al conectar con Atenea. Revisa tu conexión.</div>`;
+            hacerScrollAbajo(mensajes);
+        }
+    }
+
+    function hacerScrollAbajo(elemento) {
+        elemento.scrollTop = elemento.scrollHeight;
+    }
+</script>
+
+</body>
+</html>
