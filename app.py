@@ -44,14 +44,20 @@ modelo.fit(X_vectorizado, y)
 # 5. Función de respuesta
 # =========================
 def responder(pregunta_usuario):
+
     pregunta_vector = vectorizador.transform([pregunta_usuario])
     intencion = modelo.predict(pregunta_vector)[0]
 
-    respuesta = df[df["intencion"] == intencion]["respuesta"].iloc[0]
+    fila = df[df["intencion"] == intencion].iloc[0]
 
-    return respuesta
+    respuesta = fila["respuesta"]
+    enlace = fila["Enlace"]
+    tipo = fila["tipo_respuesta"]
 
-# =========================
+    if tipo == "enlace" and pd.notna(enlace):
+        return f"{respuesta}\n 😎: {enlace}"
+    else:
+        return respuesta# =========================
 # 6. Flask app
 # =========================
 app = Flask(__name__)
